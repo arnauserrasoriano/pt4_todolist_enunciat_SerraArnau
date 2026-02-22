@@ -17,7 +17,7 @@ public class GestorTasques {
     private void validarSiExisteixTasca(String descripcio) throws Exception {
 
         for (Tasca tasca : llista) {
-            if (tasca.getDescripcio().equals(descripcio)) {
+            if (tasca.getDescripcio().equalsIgnoreCase(descripcio)) {
                 throw new Exception("La tasca ja existeix");
             }
         }
@@ -26,7 +26,7 @@ public class GestorTasques {
 
     public void eliminarTasca(int id) {
         for (int i = 0; i < llista.size(); i++) {
-            if (llista.get(i).getId() != id) {
+            if (llista.get(i).getId() == id) {
                 llista.remove(i);
                 break;
             }
@@ -47,11 +47,11 @@ public class GestorTasques {
     }
 
     public void modificarTasca(int id, String novaDescripcio, Boolean completada) throws Exception {
-        validarSiExisteixTasca(novaDescripcio);
         Tasca tascaModificada = null;
         for (Tasca tasca : llista) {
             if (tasca.getId() == id) {
                 tasca.setCompletada(completada == null ? false : completada);
+                tasca.setDescripcio(novaDescripcio);
                 tascaModificada = tasca;
                 break;
             }
@@ -85,12 +85,13 @@ public class GestorTasques {
 
     private List<Tasca> filtrarPerDescripcio(String filtreDescripcio, List<Tasca> tasques) {
         List<Tasca> tasquesFiltrades = new ArrayList<>();
+        String filtre=filtreDescripcio.toLowerCase().trim();
         for (Tasca tasca : tasques) {
-            if (tasca.getDescripcio() == filtreDescripcio) { // hauria de ser tasca.getDescripcio().contains(...)
+            if (tasca.getDescripcio().contains(filtre)) { // hauria de ser tasca.getDescripcio().contains(...)
                 tasquesFiltrades.add(tasca);
             }
         }
-        return tasques;
+        return tasquesFiltrades;
     }
 
     // Persistència amb serialització
